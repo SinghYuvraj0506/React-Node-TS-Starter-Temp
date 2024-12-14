@@ -53,14 +53,12 @@ export const registerUser = asyncHandler(
         expires: new Date(jwtData.expiry),
         ...cookieALlOptions,
       })
-      // .redirect(process.env.CLIENT_URL as string)
-      .json(
-        new ApiResponse(200,user,"User registered successfully")
-      )
+      .redirect(process.env.CLIENT_URL as string)
+      // .json(
+      //   new ApiResponse(200,user,"User registered successfully")
+      // )
   }
 );
-
-
 
 export const loginUser = asyncHandler(async (req: Request, res: Response) => {
   const { body:{email, password} }: z.infer<typeof loginUserSchema> = req;
@@ -96,19 +94,43 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
       expires: new Date(jwtData.expiry),
       ...cookieALlOptions,
     })
-    // .redirect(process.env.CLIENT_URL as string)
-    .json(
-      new ApiResponse(200,user,"User logged in successfully")
-    )
+    .redirect(process.env.CLIENT_URL as string)
+    // .json(
+    //   new ApiResponse(200,user,"User logged in successfully")
+    // )
 });
 
+export const getUserData = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userData = req.user
 
+    const user = await prisma.user.findUnique({
+      where:{
+        id:userData?.id
+      },
+      select:{
+        name:true,
+        email:true,
+        id:true
+      }
+    })
+
+    if(!user){
+      throw new ApiError(400, "Some Error Occured, logout and try again");
+    }
+    
+    res
+      .json(
+        new ApiResponse(200,{...user},"User fetched successfully")
+      )
+  }
+);
 
 export const logoutUser = asyncHandler(async (req: Request, res: Response) => {
   res
     .clearCookie('backend-token')
-    // .redirect(process.env.CLIENT_URL as string)
-    .json(
-      new ApiResponse(200,null,"User logged out successfully")
-    )
+    .redirect(process.env.CLIENT_URL as string)
+    // .json(
+    //   new ApiResponse(200,null,"User logged out successfully")
+    // )
 });

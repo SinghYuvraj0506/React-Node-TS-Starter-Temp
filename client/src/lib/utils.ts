@@ -7,4 +7,4 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 
-export const axiosServices = axios.create({ baseURL: import.meta.env.VITE_BACKEND_URL });
+export const axiosServices = axios.create({ baseURL: import.meta.env.VITE_BACKEND_URL, withCredentials:true });

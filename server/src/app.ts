@@ -8,7 +8,7 @@ import router from "./routes";
 const app = express();
 
 const corsOptions = {
-  origin: "*",
+  origin: [process.env.CLIENT_URL as string],
   credentials: true,
 };
 

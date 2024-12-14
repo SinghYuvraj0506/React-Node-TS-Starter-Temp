@@ -5,6 +5,9 @@ import ProtectRoutes from "./components/global/ProtectRoutes";
 import Landing from "./pages/Landing";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import { useAppSelector } from "./lib/store";
+import Dashboard from "./pages/dashboard/Dashboard";
+import NotFoundPage from "./pages/NotFound";
 
 const router = (isAuthenticated: boolean, loading: boolean) => {
   return createBrowserRouter([
@@ -44,16 +47,36 @@ const router = (isAuthenticated: boolean, loading: boolean) => {
         },
       ],
     },
+    {
+      path: "/dashboard",
+      element: (
+        <ProtectRoutes
+          navigateTo="/"
+          allowed={isAuthenticated}
+          loading={loading}
+        />
+      ),
+      children: [
+        {
+          path: "",
+          element: <Dashboard />,
+        }
+      ],
+    },
+    {
+      path: "*",
+      element:<NotFoundPage/>
+    },
   ]);
 };
 
 function App() {
+  const {user, loading} = useAppSelector(state => state.auth);
 
   return (
     <div className="w-full h-full">
       <RouterProvider
-        // router={router(isAuthenticated || false, loading || false)}
-        router={router(false, false)}
+        router={router(Boolean(user) || false, loading || false)}
       />
       <Toaster />
     </div>

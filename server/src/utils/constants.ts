@@ -5,7 +5,7 @@ export const cookieALlOptions: () => CookieOptions = () => {
       return {
         httpOnly: true,
         secure: false,
-        sameSite: "lax",
+        sameSite: "none",
         domain:"localhost"
       };
     }
