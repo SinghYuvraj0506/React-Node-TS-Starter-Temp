@@ -9,12 +9,23 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  email      String   @unique
-  password   String
-  name       String
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now()) @updatedAt
+  id String @id @default(uuid())
 
-  @@map("user")
+  email        String           @unique
+  password     String?
+  name         String
+  image        String?
+  provider     ACCOUNT_PROVIDER
+  refreshToken String?
+  status       Int              @default(1)
+  created_at   DateTime         @default(now())
+  updated_at   DateTime         @default(now()) @updatedAt
+
+  @@map("users")
+}
+
+
+enum ACCOUNT_PROVIDER {
+  GOOGLE
+  CREDENTIALS
 }
